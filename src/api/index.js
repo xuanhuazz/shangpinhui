@@ -12,3 +12,5 @@ export const reqSearchList = (params) => requests({url:'/list',method:'post',dat
 export const reqDetailList = (skuId) => requests({url:`/item/${skuId}`,method:'get'})
 //加入购物车数据
 export const reqAddToCart = (skuId,skuNum) => requests({url:`/cart/addToCart/${skuId}/${skuNum}`,method:'post'})
+//获取购物车列表数据
+export const reqCartList = () => requests({url:`/cart/cartList`,method:'get'})

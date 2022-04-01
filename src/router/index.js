@@ -6,6 +6,8 @@ import Login from '@/pages/Login'
 import Register from '@/pages/Register'
 import Search from '@/pages/Search'
 import Detail from '@/pages/Detail'
+import AddCartSuccess from '@/pages/AddCartSuccess'
+import ShopCar from '@/pages/ShopCar'
 //重写push方法
 let originPush = VueRouter.prototype.push
 VueRouter.prototype.push = function(location,resolve,reject){
@@ -44,6 +46,20 @@ export default new VueRouter({
             name:'detail',
             path:'/detail/:skuId?',
             component:Detail,
+            meta:{show:true},
+            props:true
+        },
+        {
+            name:'addCartSuccess',
+            path:'/addCartSuccess',
+            component:AddCartSuccess,
+            meta:{show:true},
+            props:true
+        },
+        {
+            name:'shopCar',
+            path:'/shopCar',
+            component:ShopCar,
             meta:{show:true},
             props:true
         },

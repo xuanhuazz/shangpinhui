@@ -1,9 +1,12 @@
 //引入请求数据的函数
-import { reqDetailList, reqAddToCart } from '@/api'
+import { reqDetailList, reqAddToCart,reqCartList } from '@/api'
+//引入uuid
+import { getUUID } from '@/utils/uuid'
 //创建action,mutation,state,getter对象
 const state = {
     detailList: [],
-    code:''
+    cartList:[],
+    // uuid_token:getUUID()
 }
 const actions = {
     async detailList({ commit }, skuId) {
@@ -14,17 +17,25 @@ const actions = {
     },
     async addToCart({ commit }, { skuId, skuNum }) {
         let result = await reqAddToCart(skuId,skuNum)
-        if (result.code == 200) {
-            console.log(result.code);
+        if(result.code == 200){
+            return 'success'
+        } else {
+            return Promise.reject(new Error('faile'))
         }
-    }
+    },
+    async cartList({ commit }, skuId) {
+        let result = await reqCartList(skuId)
+        if (result.code == 200) {
+            commit('CARTLIST', result.data)
+        }
+    },
 }
 const mutations = {
     DETAILLIST(state, detailList) {
         state.detailList = detailList
     },
-    ADDTOCART(state, code) {
-        state.code = code
+    CARTLIST(state, cartList) {
+        state.cartList = cartList
     },
 }
 const getters = {

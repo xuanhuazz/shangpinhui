@@ -354,6 +354,7 @@ import { mapGetters, mapState } from 'vuex';
       }),
     },
     methods:{
+      //修改点击选项的样式
       changeActive(spuValue,spuSaleAttrValueList){
         //先让所有的isChecked为0，再让点击的为1
         spuSaleAttrValueList.forEach(item => {
@@ -361,6 +362,7 @@ import { mapGetters, mapState } from 'vuex';
         });
         spuValue.isChecked = '1'
       },
+      //修改购买数量
       changeSkuNum(event){
         let value = event.target.value
         //当用户输入非法时（输入带有字符串、输入负数）
@@ -369,9 +371,13 @@ import { mapGetters, mapState } from 'vuex';
         else value = parseInt(value)
         this.skuNum = value
       },
-      addToCart(){
-        this.$store.dispatch('addToCart',{skuId:this.$route.params.skuId,skuNum:this.skuNum})
-        
+      //添加购物车
+      async addToCart(){
+        let res = await this.$store.dispatch('addToCart',{skuId:this.$route.params.skuId,skuNum:this.skuNum})
+        if(res == 'success') {
+        sessionStorage.setItem('SKUINFO',JSON.stringify(this.skuInfo))
+        this.$router.push({name:'addCartSuccess',query:{skuNum:this.skuNum}})
+        }
       }
     }
   }

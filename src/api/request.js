@@ -3,6 +3,7 @@ import axios from "axios";
 import nprogress from "nprogress";
 //引入nprogress样式
 import 'nprogress/nprogress.css'
+
 const requests = axios.create({
     baseURL:'/api',
     timeout:5000    //访问大于5s取消
@@ -11,6 +12,7 @@ const requests = axios.create({
 //设置请求拦截器
 requests.interceptors.request.use(function (config) {
     nprogress.start()
+    config.headers.userTempId = localStorage.getItem('UUID')
     return config;
 }, function (error) {
     return Promise.reject(error);
