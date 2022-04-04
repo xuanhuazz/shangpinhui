@@ -11,7 +11,7 @@
         <div class="cart-th6">操作</div>
       </div>
       <div class="cart-body">
-        <ul class="cart-list" v-for="(item,index) in cartList[0].cartInfoList" :key="item.id">
+        <ul class="cart-list" v-for="item in cartList[0].cartInfoList" :key="item.id">
           <li class="cart-list-con1">
             <input type="checkbox" name="chk_list">
           </li>
@@ -22,9 +22,9 @@
             <span class="price">{{item.cartPrice}}</span>
           </li>
           <li class="cart-list-con5">
-            <a href="javascript:void(0)" class="mins" @click="skuNum<=1?skuNum = 1:skuNum[index]--">-</a>
-            <input autocomplete="off" type="text" value="1" minnum="1" class="itxt" v-model="skuNum[index]" @change="changeSkuNum">
-            <a href="javascript:void(0)" class="plus" @click="skuNum[index]= skuNum[index] + 1">+</a>
+            <a href="javascript:void(0)" class="mins" @click="handler('minus',-1,item)">-</a>
+            <input autocomplete="off" type="text" :value="item.skuNum" minnum="1" class="itxt"  @change="handler('change',$event.target.value * 1 - item.skuNum,item)">
+            <a href="javascript:void(0)" class="plus" @click="handler('add',1,item)">+</a>
           </li>
           <li class="cart-list-con6">
             <span class="sum">399</span>
@@ -73,7 +73,6 @@ import { mapState } from 'vuex'
     },
     mounted(){
       this.$store.dispatch('cartList')
-      
     },
     computed: {
       ...mapState({
@@ -81,14 +80,12 @@ import { mapState } from 'vuex'
       }),
     },
     methods:{
-       changeSkuNum(event){
-        let value = event.target.value
-        //当用户输入非法时（输入带有字符串、输入负数）
-        if(isNaN(value * 1) || value < 1) value = 1
-        //当用户输入小数时
-        else value = parseInt(value)
-        this.skuNum = value
-      },
+       handler(type,num,item){
+         //派发增加减少的请求
+         this.$store.dispatch('addToCart',{skuId:item.skuId,skuNum:num})
+         //重新获取新的skuNum
+         this.$store.dispatch('cartList')
+       }
     }
   }
 </script>
