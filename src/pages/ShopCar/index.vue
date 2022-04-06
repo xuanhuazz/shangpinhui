@@ -13,7 +13,8 @@
       <div class="cart-body">
         <ul class="cart-list" v-for="item in cartList[0].cartInfoList" :key="item.id">
           <li class="cart-list-con1">
-            <input type="checkbox" name="chk_list">
+            <input type="checkbox" name="chk_list" :checked="item.isChecked == 1?true:false" 
+            :value="item.id" @change="changeChecked(item,$event)">
           </li>
           <li class="cart-list-con2">
             <img :src="item.imgUrl">
@@ -23,14 +24,15 @@
           </li>
           <li class="cart-list-con5">
             <a href="javascript:void(0)" class="mins" @click="handler('minus',-1,item)">-</a>
-            <input autocomplete="off" type="text" :value="item.skuNum" minnum="1" class="itxt"  @change="handler('change',$event.target.value * 1 - item.skuNum,item)">
+            <input autocomplete="off" type="text" :value="item.skuNum" minnum="1" class="itxt"  
+            @change="handler('change',$event.target.value * 1 - item.skuNum,item)" >
             <a href="javascript:void(0)" class="plus" @click="handler('add',1,item)">+</a>
           </li>
           <li class="cart-list-con6">
-            <span class="sum">399</span>
+            <span class="sum">{{item.skuNum * item.cartPrice}}</span>
           </li>
           <li class="cart-list-con7">
-            <a href="#none" class="sindelet">删除</a>
+            <a href="#none" class="sindelet" @click="deleteCart(item)">删除</a>
             <br>
             <a href="#none">移到收藏</a>
           </li>
@@ -39,11 +41,11 @@
     </div>
     <div class="cart-tool">
       <div class="select-all">
-        <input class="chooseAll" type="checkbox">
+        <input class="chooseAll" type="checkbox" :checked="isAllChecked"  @change="updateChecked($event)">
         <span>全选</span>
       </div>
       <div class="option">
-        <a href="#none">删除选中的商品</a>
+        <a href="#none" @click="deleteHandle">删除选中的商品</a>
         <a href="#none">移到我的关注</a>
         <a href="#none">清除下柜商品</a>
       </div>
@@ -68,23 +70,80 @@ import { mapState } from 'vuex'
     name: 'ShopCart',
     data(){
       return{
-        skuNum:[1,1,1,1,1,1]
+        checkMoudle:[]
       }
     },
     mounted(){
-      this.$store.dispatch('cartList')
+      this.getCartList()
     },
     computed: {
       ...mapState({
-        cartList: (state) => state.detail.cartList,
+        cartList: (state) => state.shopcart.cartList,
       }),
+      isAllChecked(){
+        return this.cartList[0].cartInfoList.every(item => item.isChecked == 1)
+      }
     },
     methods:{
+      getCartList(){
+        this.$store.dispatch('cartList')
+      },
+      //购物车数量加减
        handler(type,num,item){
+         //根据类型判断num为几
+         switch (type){
+          case 'add':
+            num = 1;
+            break;
+          case 'minus':
+            if(item.skuNum > 1){
+              num = -1;
+            } else {
+              num = 0
+            }
+            break;
+          case 'change':
+            if(isNaN(num * 1) || num < 1){  //如果输入的为不合法、负数
+              num = 0
+            } else {
+              num = parseInt(num)
+            }
+         }
          //派发增加减少的请求
          this.$store.dispatch('addToCart',{skuId:item.skuId,skuNum:num})
          //重新获取新的skuNum
-         this.$store.dispatch('cartList')
+         this.getCartList()
+       },
+       //删除购物车商品
+       async deleteCart(item){
+        try {
+          await this.$store.dispatch('deleteList',item.skuId)
+          this.getCartList()
+        } catch (error) {
+          alert(error.message)
+        }
+       },
+       //修改商品选中状态
+       changeChecked(item,event){
+         let isChecked = event.target.checked ?1:0
+         this.$store.dispatch('checkCart',{skuId:item.skuId,isChecked:isChecked})
+         this.getCartList()
+       },
+       //删除选中的商品
+       deleteHandle(){
+         this.cartList[0].cartInfoList.forEach(e => {
+           if(e.isChecked == 1){
+             this.deleteCart(e)
+           }
+         });
+       },
+       //全选商品
+       updateChecked(event){
+        this.cartList[0].cartInfoList.forEach(e => {
+          this.changeChecked(e,event)
+        });
+        console.log(this.isAllChecked);
+        this.getCartList()
        }
     }
   }

@@ -14,3 +14,7 @@ export const reqDetailList = (skuId) => requests({url:`/item/${skuId}`,method:'g
 export const reqAddToCart = (skuId,skuNum) => requests({url:`/cart/addToCart/${skuId}/${skuNum}`,method:'post'})
 //获取购物车列表数据
 export const reqCartList = () => requests({url:`/cart/cartList`,method:'get'})
+//删除购物车内商品
+export const reqDeleteCart = (skuId) => requests({url:`/cart/deleteCart/${skuId}`,method:'delete'})
+//修改购物车选中状态
+export const reqCheckCart = (skuId,isChecked) => requests({url:`/cart/checkCart/${skuId}/${isChecked}`,method:'get'})
