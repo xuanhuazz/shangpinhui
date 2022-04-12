@@ -13,6 +13,9 @@ const requests = axios.create({
 requests.interceptors.request.use(function (config) {
     nprogress.start()
     config.headers.userTempId = localStorage.getItem('UUID')
+    if(localStorage.getItem('TOKEN') != ''){
+        config.headers.token = localStorage.getItem('TOKEN')
+    }
     return config;
 }, function (error) {
     return Promise.reject(error);

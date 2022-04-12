@@ -16,6 +16,7 @@ import search from './search'
 import detail from './detail'
 import shopcart from './shopcart'
 import register from './register'
+import login from './login'
 Vue.use(Vuex)
 export default new Vuex.Store({
     actions,
@@ -25,7 +26,8 @@ export default new Vuex.Store({
         search,
         detail,
         shopcart,
-        register
+        register,
+        login
     },
     getters
 })

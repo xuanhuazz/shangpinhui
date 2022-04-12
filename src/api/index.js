@@ -22,3 +22,10 @@ export const reqCheckCart = (skuId,isChecked) => requests({url:`/cart/checkCart/
 export const reqsendCode = (phone) => requests({url:`/user/passport/sendCode/${phone}`,method:'get'})
 //注册
 export const reqRegister = (data) => requests({url:`/user/passport/register`,data,method:'post'})
+//登录（可以得到token）
+export const reqLogin = (data) => requests({url:`/user/passport/login`,data,method:'post'})
+//携带token获取用户数据
+export const reqGetUserInfo = () => requests({url:`/user/passport/auth/getUserInfo`,method:'get'})
+//退出
+export const reqLoginOut = () => requests({url:`/user/passport/logout`,method:'get'})
+

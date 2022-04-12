@@ -37,12 +37,14 @@ export default {
   mounted() {
     //发送获取floorList的请求
     this.$store.dispatch("getFloorList");
+
   },
   computed: {
     ...mapState({
       floorList: (state) => state.home.floorList,
     }),
   },
+  
 };
 </script>
 

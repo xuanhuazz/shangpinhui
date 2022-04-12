@@ -18,15 +18,17 @@ VueRouter.prototype.push = function(location,resolve,reject){
     }
 }
 Vue.use(VueRouter)
-export default new VueRouter({
+let router =  new VueRouter({
     routes:[
         {
+            name:'home',
             path:'/home',
             component:Home,
             meta:{show:true}
         },
         {
             path:'/login',
+            name:'login',
             component:Login,
             meta:{show:false}
         },
@@ -72,3 +74,26 @@ export default new VueRouter({
         return {y:0}
     }
 })
+//设置全局前置路由守卫
+router.beforeEach((to,from,next)=>{
+    let token = localStorage.getItem('TOKEN')
+    console.log(token);
+    if(!token){
+        if(to.path == '/shopCar'){
+            console.log('我去了购物车');
+            alert('errrr')
+        }else {
+            next()
+            console.log('我没登录去了别的地');
+        }
+    } else {
+        if(to.path == '/login'){
+
+            alert('你已经登陆过啦！')
+        }else {
+            console.log(1234);
+            next()
+        }
+    }
+})
+export default router

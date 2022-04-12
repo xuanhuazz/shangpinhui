@@ -158,9 +158,9 @@ export default {
       }
     },
     //修改商品选中状态
-    changeChecked(item, event) {
+    async changeChecked(item, event) {
       let isChecked = event.target.checked ? 1 : 0;
-      this.$store.dispatch("checkCart", {
+      await this.$store.dispatch("checkCart", {
         skuId: item.skuId,
         isChecked: isChecked,
       });

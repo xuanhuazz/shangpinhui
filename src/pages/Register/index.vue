@@ -86,7 +86,7 @@ import { mapState } from 'vuex'
         try {
           const {phone,code,password} = this
           await this.$store.dispatch('register',{phone,code,password})
-          this.$router.push('/login')
+          this.$router.push({name:'login',query:{phone,password}})
         } catch (error) {
           return new Error('faile')
         }

@@ -5,15 +5,19 @@
       <div class="container">
         <div class="loginList">
           <p>尚品汇欢迎您！</p>
-          <p>
+          <p v-if="!userInfo.name">
             <span>请</span>
             <router-link to="/login">登陆</router-link>
             <router-link class="register" to="/register">免费注册</router-link>
           </p>
+          <p v-else>
+            <span>{{userInfo.name}}</span>
+            <span @click="loginout">退出</span>
+          </p>
         </div>
         <div class="typeList">
           <a href="###">我的订单</a>
-          <a href="###">我的购物车</a>
+          <router-link to="/shopCar">我的购物车</router-link>
           <a href="###">我的尚品汇</a>
           <a href="###">尚品汇会员</a>
           <a href="###">企业采购</a>
@@ -52,6 +56,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 export default {
   name: "Header",
 
@@ -59,6 +64,11 @@ export default {
     return {
       keyword: "",
     };
+  },
+  computed:{
+    ...mapState({
+      userInfo:state => state.home.userInfo
+    })
   },
   methods: {
     goSearch() {
@@ -90,6 +100,10 @@ export default {
         this.$router.push(location);
       }
     },
+    async loginout(){
+      await this.$store.dispatch('loginOut')
+      localStorage.setItem('TOKEN','')
+    }
   },
   mounted() {
     this.$bus.$on("empty", (i) => this.keyword = i);

@@ -15,6 +15,8 @@ export default {
   mounted(){
     //发送dispatch请求三级联动列表，将请求放在APP中，请求只会实行一次
     this.$store.dispatch("categoryList");
+        //发送获取用户信息请求
+    this.$store.dispatch('getUserInfo')
   }
 }
 </script>
